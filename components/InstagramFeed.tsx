@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Script from 'next/script';
+import { fallbackInstagramPosts, INSTAGRAM_PROFILE_URL, INSTAGRAM_USERNAME } from '@/data/instagramPosts';
 
 interface InstagramPost {
   shortcode: string;
@@ -15,7 +17,77 @@ interface InstagramFeedResponse {
   username: string;
   profileUrl: string;
   posts: InstagramPost[];
-  error?: string;
+  source?: 'graph' | 'web' | 'embed';
+}
+
+function InstagramEmbeds({ posts }: { posts: InstagramPost[] }) {
+  useEffect(() => {
+    const instgrm = (window as Window & { instgrm?: { Embeds?: { process: () => void } } }).instgrm;
+    instgrm?.Embeds?.process();
+  }, [posts]);
+
+  return (
+    <>
+      <Script src="https://www.instagram.com/embed.js" strategy="lazyOnload" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
+        {posts.map((post) => (
+          <div key={post.shortcode} className="flex justify-center [&_.instagram-media]:!m-0 [&_.instagram-media]:!w-full [&_.instagram-media]:!max-w-full [&_.instagram-media]:!min-w-0">
+            <blockquote
+              className="instagram-media"
+              data-instgrm-permalink={post.permalink}
+              data-instgrm-version="14"
+              style={{ background: '#FFF', border: 0, borderRadius: '1rem', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', margin: 0, maxWidth: '100%', minWidth: 0, padding: 0, width: '100%' }}
+            >
+              <a href={post.permalink} target="_blank" rel="noreferrer">
+                {post.caption.slice(0, 80) || 'View on Instagram'}
+              </a>
+            </blockquote>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function InstagramImageGrid({ posts }: { posts: InstagramPost[] }) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
+      {posts.map((post) => (
+        <a
+          key={post.shortcode}
+          href={post.permalink}
+          target="_blank"
+          rel="noreferrer"
+          className="group relative aspect-square overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+        >
+          <Image
+            src={post.imageUrl}
+            alt={post.caption.slice(0, 100) || 'AARTI Instagram post'}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+            {post.caption && (
+              <p className="text-white text-sm line-clamp-3 mb-2">{post.caption}</p>
+            )}
+            <div className="flex items-center gap-1.5 text-white/90 text-xs">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+              {post.likes > 0 && <span>{post.likes}</span>}
+              <span className="ml-auto flex items-center gap-1">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm10 2a3 3 0 013 3v10a3 3 0 01-3 3H7a3 3 0 01-3-3V7a3 3 0 013-3h10zm-5 3.5A4.5 4.5 0 107 12a4.5 4.5 0 005-4.5zm0 2A2.5 2.5 0 1110.5 12 2.5 2.5 0 0112 9.5zm4.75-4.25a1.25 1.25 0 11-1.25 1.25 1.25 1.25 0 011.25-1.25z" />
+                </svg>
+                View
+              </span>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  );
 }
 
 export default function InstagramFeed() {
@@ -26,12 +98,20 @@ export default function InstagramFeed() {
     fetch('/api/instagram')
       .then((res) => res.json())
       .then((data: InstagramFeedResponse) => setFeed(data))
-      .catch(() => setFeed({ username: 'aartiofficialcenter', profileUrl: 'https://www.instagram.com/aartiofficialcenter/', posts: [] }))
+      .catch(() =>
+        setFeed({
+          username: INSTAGRAM_USERNAME,
+          profileUrl: INSTAGRAM_PROFILE_URL,
+          posts: fallbackInstagramPosts,
+          source: 'embed',
+        })
+      )
       .finally(() => setLoading(false));
   }, []);
 
-  const profileUrl = feed?.profileUrl ?? 'https://www.instagram.com/aartiofficialcenter/';
+  const profileUrl = feed?.profileUrl ?? INSTAGRAM_PROFILE_URL;
   const posts = feed?.posts ?? [];
+  const useEmbeds = feed?.source === 'embed' || posts.every((post) => !post.imageUrl);
 
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
@@ -55,7 +135,7 @@ export default function InstagramFeed() {
               rel="noreferrer"
               className="text-primary font-semibold hover:text-secondary transition"
             >
-              @{feed?.username ?? 'aartiofficialcenter'}
+              @{feed?.username ?? INSTAGRAM_USERNAME}
             </a>
             .
           </p>
@@ -68,42 +148,7 @@ export default function InstagramFeed() {
             ))}
           </div>
         ) : posts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
-            {posts.map((post) => (
-              <a
-                key={post.shortcode}
-                href={post.permalink}
-                target="_blank"
-                rel="noreferrer"
-                className="group relative aspect-square overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              >
-                <Image
-                  src={post.imageUrl}
-                  alt={post.caption.slice(0, 100) || 'AARTI Instagram post'}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                  {post.caption && (
-                    <p className="text-white text-sm line-clamp-3 mb-2">{post.caption}</p>
-                  )}
-                  <div className="flex items-center gap-1.5 text-white/90 text-xs">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                    </svg>
-                    {post.likes > 0 && <span>{post.likes}</span>}
-                    <span className="ml-auto flex items-center gap-1">
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm10 2a3 3 0 013 3v10a3 3 0 01-3 3H7a3 3 0 01-3-3V7a3 3 0 013-3h10zm-5 3.5A4.5 4.5 0 107 12a4.5 4.5 0 005-4.5zm0 2A2.5 2.5 0 1110.5 12 2.5 2.5 0 0112 9.5zm4.75-4.25a1.25 1.25 0 11-1.25 1.25 1.25 1.25 0 011.25-1.25z" />
-                      </svg>
-                      View
-                    </span>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
+          useEmbeds ? <InstagramEmbeds posts={posts} /> : <InstagramImageGrid posts={posts} />
         ) : (
           <p className="text-center text-paragraph">
             Instagram posts are temporarily unavailable.{' '}
