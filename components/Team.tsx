@@ -3,54 +3,38 @@
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
+import { executiveCouncilMembers } from '@/data/councilMembers';
+
+function MemberPhoto({ name, image }: { name: string; image: string }) {
+  if (!image) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+        <svg className="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.33 0-6 2.24-6 5v1h12v-1c0-2.76-2.67-5-6-5z" />
+        </svg>
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={image}
+      alt={name}
+      fill
+      sizes="(max-width: 576px) 90vw, (max-width: 992px) 45vw, 25vw"
+      className="object-cover team-member-image"
+    />
+  );
+}
 
 export default function Team() {
-  const teamMembers = [
-    {
-      id: 1,
-      image: '/images/promoters/member-1.png',
-      name: 'Shri Mansingh Pawar',
-      designation: 'President',
-    },
-    {
-      id: 2,
-      image: '/images/promoters/member-2.png',
-      name: 'Shri Pramod Khairnar',
-      designation: 'Vice President',
-    },
-    {
-      id: 3,
-      image: '/images/promoters/member-3.png',
-      name: 'Wing Commander T. R. Jadhav',
-      designation: 'Secretary (Retired Military)',
-    },
-    {
-      id: 4,
-      image: '/images/promoters/member-4.png',
-      name: 'Shri Sunil Kirdak',
-      designation: 'Secretary',
-    },
-    {
-      id: 5,
-      image: '/images/promoters/member-5.png',
-      name: 'Smt. Anuradha Chavan',
-      designation: 'Secretary',
-    },
-    {
-      id: 6,
-      image: '/images/promoters/member-6.png',
-      name: 'Shri Satish Tupe',
-      designation: 'Secretary',
-    },
-  ];
-
   return (
     <section id="promoters" className="py-12 sm:py-16 lg:py-20 bg-white">
       <div className="container mx-auto px-4">
         {/* Unified Section Header */}
         <div className="text-center mb-8 sm:mb-12">
           <span className="text-secondary font-semibold text-sm uppercase tracking-wide block mb-2">
-            Our Leadership
+            Executive Council &amp; Promoters
           </span>
           <div className="inline-block mb-3 sm:mb-4">
             <div className="w-16 h-1 bg-secondary/30 mx-auto mb-2"></div>
@@ -79,7 +63,7 @@ export default function Team() {
               1400: { slidesPerView: 4, spaceBetween: 32 },
             }}
           >
-          {teamMembers.map((member) => (
+          {executiveCouncilMembers.map((member) => (
             <SwiperSlide key={member.id} className="h-auto">
               <div className="bg-white rounded-xl shadow-sm overflow-hidden text-center transition-all duration-300 team-member-card h-full">
                 <div className="relative z-[1] team-member-img">
@@ -87,13 +71,7 @@ export default function Team() {
                     className="relative w-full overflow-hidden bg-[#f9f9f9] rounded-t-xl"
                     style={{ aspectRatio: '4/5' }}
                   >
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      sizes="(max-width: 576px) 90vw, (max-width: 992px) 45vw, 25vw"
-                      className="object-cover team-member-image"
-                    />
+                    <MemberPhoto name={member.name} image={member.image} />
                     {/* Gradient Overlay */}
                     <div className="team-member-overlay"></div>
                     {/* Social Icons */}

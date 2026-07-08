@@ -1,67 +1,38 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import Image from "next/image";
 
-const instructors = [
+const educators = [
   {
     id: 1,
-    name: 'Rahul Kulkarni',
-    role: 'Senior Web Developer',
-    image: '/images/team/team1.jpg',
-    bio: '10+ years of experience in web development. Former lead developer at Google.',
-    courses: 12,
-    students: 50000,
-    rating: 4.9,
+    name: 'NIIT Foundation',
+    role: 'Education & Skill Development Partner',
+    image: '/images/educators/niit-foundation.png',
+    website: 'https://niitfoundation.org/',
+    highlights: [
+      'Presence across 24 states in India',
+      '551 partner NGO centres across the country',
+      '3.5+ lakh students directly impacted',
+      '2,130+ trainers trained and certified',
+      '47,600+ students placed in organized sectors',
+      '6,450 differently abled students supported',
+    ],
+    bio: 'NIIT Foundation is a not-for-profit education society (NGO) set up by the promoters of NIIT in 2004. It implements CSR programs and builds partnerships with NGOs to drive sustainable skill development and education initiatives across underserved communities in India.',
   },
   {
     id: 2,
-    name: 'Priya Deshmukh',
-    role: 'Data Scientist',
-    image: '/images/team/team2.jpg',
-    bio: 'PhD in Computer Science. Expert in machine learning and data analysis.',
-    courses: 8,
-    students: 35000,
-    rating: 4.8,
-  },
-  {
-    id: 3,
-    name: 'Sanjay Patil',
-    role: 'UI/UX Designer',
-    image: '/images/team/team3.jpg',
-    bio: 'Award-winning designer with 15+ years of experience. Worked with top tech companies.',
-    courses: 15,
-    students: 60000,
-    rating: 4.9,
-  },
-  {
-    id: 4,
-    name: 'Aarti Joshi',
-    role: 'Mobile App Developer',
-    image: '/images/team/team4.jpg',
-    bio: 'iOS and Android expert. Created multiple successful apps with millions of downloads.',
-    courses: 10,
-    students: 40000,
-    rating: 4.7,
-  },
-  {
-    id: 5,
-    name: 'Vikram Shah',
-    role: 'Digital Marketing Expert',
-    image: '/images/team/team5.jpg',
-    bio: 'Helped hundreds of businesses grow their online presence. SEO and social media specialist.',
-    courses: 9,
-    students: 28000,
-    rating: 4.6,
-  },
-  {
-    id: 6,
-    name: 'Neha Kulkarni',
-    role: 'Python Developer',
-    image: '/images/team/team6.jpg',
-    bio: 'Python enthusiast and educator. Author of multiple programming books.',
-    courses: 11,
-    students: 45000,
-    rating: 4.8,
+    name: 'Vikalp Guru',
+    role: 'Career Guidance & Technical Empowerment Partner',
+    image: '/images/educators/vikalp-guru.png',
+    website: 'https://vikalpaguru.com/',
+    highlights: [
+      'Educational and technical empowerment organization focused on building industry-ready professionals',
+      'Provides structured career guidance, mentorship, and skill development initiatives',
+      'Dedicated to improving employability for youth across rural and urban communities',
+      'Committed to building a sustainable ecosystem for skills, employment, and professional growth',
+    ],
+    bio: 'Vikalp Guru is an educational and technical empowerment organization headquartered in Chhatrapati Sambhajinagar, Maharashtra. The platform combines AI-driven career counselling with expert mentorship to guide students from stream selection through college admission and professional growth.',
   },
 ];
 
@@ -87,44 +58,50 @@ export default function InstructorsPage() {
 
         <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {instructors.map((instructor) => (
+            <div className="max-w-3xl mx-auto text-center mb-12">
+              <p className="text-paragraph text-lg">
+                AARTI collaborates with leading education and career guidance partners to deliver quality training,
+                mentorship, and employability support for youth across Maharashtra and India.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+              {educators.map((educator) => (
                 <div
-                  key={instructor.id}
-                  className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition group"
+                  key={educator.id}
+                  className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition"
                 >
-                  <div className="relative h-72 overflow-hidden bg-gray-100 flex items-center justify-center">
-                    <svg
-                      className="w-20 h-20 text-gray-300"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.33 0-6 2.24-6 5v1h12v-1c0-2.76-2.67-5-6-5z" />
-                    </svg>
+                  <div className="relative h-48 sm:h-56 bg-[#faf8f5] flex items-center justify-center p-6">
+                    <Image
+                      src={educator.image}
+                      alt={educator.name}
+                      width={320}
+                      height={120}
+                      className="max-h-full w-auto object-contain"
+                    />
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-black mb-1">{instructor.name}</h3>
-                    <p className="text-secondary font-medium mb-3">{instructor.role}</p>
-                    <p className="text-paragraph mb-4 text-sm">{instructor.bio}</p>
-                    <div className="flex items-center justify-between text-sm text-paragraph mb-4 pt-4 border-t">
-                      <div>
-                        <span className="font-bold text-black">{instructor.courses}</span> Courses
-                      </div>
-                      <div>
-                        <span className="font-bold text-black">{instructor.students.toLocaleString()}</span> Students
-                      </div>
-                      <div className="flex items-center">
-                        <span className="text-yellow-500">★</span>
-                        <span className="font-bold text-black ml-1">{instructor.rating}</span>
-                      </div>
-                    </div>
-                    <Link
-                      href={`/courses?instructor=${instructor.id}`}
-                      className="block w-full bg-primary text-white text-center px-4 py-3 rounded-full font-semibold hover:bg-secondary transition"
+                  <div className="p-6 sm:p-8">
+                    <h3 className="text-2xl font-bold text-black mb-1">{educator.name}</h3>
+                    <p className="text-secondary font-medium mb-4">{educator.role}</p>
+                    <p className="text-paragraph mb-5 text-sm leading-relaxed">{educator.bio}</p>
+                    <ul className="space-y-2 mb-6">
+                      {educator.highlights.map((highlight) => (
+                        <li key={highlight} className="flex items-start gap-2 text-sm text-paragraph">
+                          <span className="text-secondary mt-1">•</span>
+                          <span>{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <a
+                      href={educator.website}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center text-primary font-semibold hover:text-secondary transition"
                     >
-                      View Courses
-                    </Link>
+                      Visit Website
+                      <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
                   </div>
                 </div>
               ))}

@@ -122,6 +122,11 @@ export default function Hero() {
                   sizes="(max-width: 1024px) 90vw, 45vw"
                   className="object-cover object-center rounded-3xl shadow-[0_18px_55px_rgba(0,0,0,0.14)]"
                 />
+                <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-auto">
+                  <span className="inline-block bg-black/70 text-white text-sm sm:text-base font-semibold px-4 py-2 rounded-lg backdrop-blur-sm">
+                    Proposed building
+                  </span>
+                </div>
               </div>
 
               {/* Decorative shapes */}

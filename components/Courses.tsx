@@ -1,112 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import CourseCard from './CourseCard';
-
-const courses = [
-  {
-    id: 1,
-    title: 'Advanced AI & ML Development',
-    // instructor: 'Expert Faculty', // Not found in PDF
-    price: 27000,
-    // rating: 4.9, // Not found in PDF
-    // students: 2500, // Not found in PDF
-    image: '/images/courses/courses1.jpg',
-    category: 'AI Skills',
-  },
-  {
-    id: 2,
-    title: 'Prompt Engineering Course',
-    // instructor: 'Expert Faculty', // Not found in PDF
-    price: 7000,
-    // rating: 4.8, // Not found in PDF
-    // students: 3200, // Not found in PDF
-    image: '/images/courses/courses2.jpg',
-    category: 'AI Skills',
-  },
-  {
-    id: 3,
-    title: 'Industrial Automation & Robotics',
-    // instructor: 'Expert Faculty', // Not found in PDF
-    price: 2000,
-    // rating: 4.9, // Not found in PDF
-    // students: 1800, // Not found in PDF - PDF mentions "batch of 30 students"
-    image: '/images/courses/courses3.jpg',
-    category: 'Technical Skills',
-  },
-  {
-    id: 4,
-    title: 'Technology for Industrial Process',
-    // instructor: 'Expert Faculty', // Not found in PDF
-    price: 0,
-    // rating: 4.7, // Not found in PDF
-    // students: 2100, // Not found in PDF
-    image: '/images/courses/courses4.jpg',
-    category: 'Technical Skills',
-  },
-  {
-    id: 5,
-    title: 'Managerial Skills & Entrepreneurship',
-    // instructor: 'Expert Faculty', // Not found in PDF
-    price: 0,
-    // rating: 4.6, // Not found in PDF
-    // students: 2800, // Not found in PDF
-    image: '/images/courses/courses1.jpg',
-    category: 'Management Skills',
-  },
-  {
-    id: 6,
-    title: 'Ability Enhancement Course',
-    // instructor: 'Expert Faculty', // Not found in PDF
-    price: 2500,
-    // rating: 4.8, // Not found in PDF
-    // students: 1500, // Not found in PDF
-    image: '/images/courses/courses2.jpg',
-    category: 'Soft Skills',
-  },
-  {
-    id: 7,
-    title: 'Vibe Coding — Code with AI',
-    // instructor: 'Expert Faculty', // Not found in PDF
-    price: 22000,
-    // rating: 4.7, // Not found in PDF
-    // students: 1200, // Not found in PDF
-    image: '/images/courses/courses3.jpg',
-    category: 'Technical Skills',
-  },
-  {
-    id: 8,
-    title: 'Supply Chain Management',
-    // instructor: 'Expert Faculty', // Not found in PDF - PDF has "Name of the Faculty:" placeholder
-    price: 0,
-    // rating: 4.8, // Not found in PDF
-    // students: 1900, // Not found in PDF
-    image: '/images/courses/courses4.jpg',
-    category: 'Management Skills',
-  },
-  {
-    id: 9,
-    title: 'Sales Training',
-    // instructor: 'Expert Faculty', // Not found in PDF
-    price: 0,
-    // rating: 4.7, // Not found in PDF
-    // students: 2400, // Not found in PDF
-    image: '/images/courses/courses1.jpg',
-    category: 'Management Skills',
-  },
-];
-
-const categories = [
-  'Technical Skills',
-  'AI Skills',
-  'Management Skills',
-  'Soft Skills',
-  'Upscaling Skills',
-  'Women Empowerment',
-  'Profession / Trade',
-];
+import { liveCourses, categories } from '@/data/courses';
 
 export default function Courses() {
   const router = useRouter();
@@ -115,24 +12,23 @@ export default function Courses() {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768); // md breakpoint
+      setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Filter courses based on selected category
   const filteredCourses = selectedCategory
-    ? courses.filter((course) => course.category === selectedCategory)
-    : isMobile 
-      ? courses.slice(0, 4) // Show first 4 courses on mobile
-      : courses.slice(0, 6); // Show first 6 courses on desktop
+    ? liveCourses.filter((course) => course.category === selectedCategory)
+    : isMobile
+      ? liveCourses.slice(0, 4)
+      : liveCourses;
 
   const handleCategoryClick = (category: string) => {
     if (selectedCategory === category) {
-      setSelectedCategory(null); // Deselect if already selected
+      setSelectedCategory(null);
     } else {
       setSelectedCategory(category);
     }
@@ -140,7 +36,6 @@ export default function Courses() {
 
   const handleViewAllClick = () => {
     if (selectedCategory) {
-      // Redirect to courses page with category filter
       router.push(`/courses?category=${encodeURIComponent(selectedCategory)}`);
     } else {
       router.push('/courses');
@@ -150,7 +45,6 @@ export default function Courses() {
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        {/* Unified Section Header */}
         <div className="text-center mb-12">
           <span className="text-secondary font-semibold text-sm uppercase tracking-wide block mb-2">
             Our Courses
@@ -164,7 +58,6 @@ export default function Courses() {
           </h2>
         </div>
 
-        {/* Principles Cards - reduced padding, italic quotes, smaller author */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-white border border-gray-100 p-4 md:p-6 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300">
             <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 md:mb-4">
@@ -201,7 +94,6 @@ export default function Courses() {
           </div>
         </div>
 
-        {/* Category Filter */}
         <div className="overflow-x-auto mb-10 pb-2 -mx-4 px-4">
           <div className="flex gap-3 min-w-max md:justify-center md:flex-wrap">
             {categories.map((category) => (
@@ -247,4 +139,4 @@ export default function Courses() {
   );
 }
 
-export { courses, categories };
+export { liveCourses as courses, categories };

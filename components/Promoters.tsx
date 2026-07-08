@@ -3,103 +3,44 @@
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
+import { executiveCouncilMembers } from '@/data/councilMembers';
+
+function MemberPhoto({ name, image }: { name: string; image: string }) {
+  if (!image) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+        <svg className="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.33 0-6 2.24-6 5v1h12v-1c0-2.76-2.67-5-6-5z" />
+        </svg>
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={image}
+      alt={name}
+      fill
+      sizes="(max-width: 576px) 90vw, (max-width: 992px) 45vw, 25vw"
+      className="object-contain p-2"
+    />
+  );
+}
 
 export default function Promoters() {
-  const teamMembers = [
-    {
-      id: 1,
-      image: '/images/promoters/member-1.png',
-      name: 'Shri Mansingh Pawar',
-      designation: 'President',
-    },
-    {
-      id: 2,
-      image: '/images/promoters/member-2.png',
-      name: 'Shri Pramod Khairnar',
-      designation: 'Vice President',
-    },
-    {
-      id: 3,
-      image: '/images/promoters/member-3.png',
-      name: 'Wing Commander T. R. Jadhav',
-      designation: 'Secretary (Retired Military)',
-    },
-    {
-      id: 4,
-      image: '/images/promoters/member-4.png',
-      name: 'Shri Sunil Kirdak',
-      designation: 'Secretary',
-    },
-    {
-      id: 5,
-      image: '/images/promoters/member-5.png',
-      name: 'Smt. Anuradha Chavan',
-      designation: 'Secretary',
-    },
-    {
-      id: 6,
-      image: '/images/promoters/member-6.png',
-      name: 'Shri Satish Tupe',
-      designation: 'Secretary',
-    },
-    {
-      id: 7,
-      image: '/images/promoters/member-7.png',
-      name: 'Dr. R. S. Khiste',
-      designation: 'Secretary',
-    },
-    {
-      id: 8,
-      image: '/images/promoters/member-8.png',
-      name: 'Shri B. S. Khose',
-      designation: 'Secretary',
-    },
-    {
-      id: 9,
-      image: '/images/promoters/member-9.png',
-      name: 'Shri Rohit Suryavanshi',
-      designation: 'Secretary',
-    },
-    {
-      id: 10,
-      image: '/images/promoters/member-10.png',
-      name: 'Shri Rajesh More',
-      designation: 'Secretary',
-    },
-    {
-      id: 11,
-      image: '/images/promoters/member-11.png',
-      name: 'Shri Pradeep Patil',
-      designation: 'Secretary',
-    },
-    {
-      id: 12,
-      image: '/images/promoters/member-12.png',
-      name: 'Shri Subhash Shelke',
-      designation: 'Secretary',
-    },
-    {
-      id: 13,
-      image: '/images/promoters/member-13.png',
-      name: 'Shri Girish L. Ubale',
-      designation: 'Secretary',
-    },
-  ];
-
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        {/* Heading */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
           <div className="mb-6 md:mb-0">
-            <span className="text-primary font-semibold text-sm uppercase tracking-wide">Our Promoters</span>
+            <span className="text-primary font-semibold text-sm uppercase tracking-wide">Executive Council &amp; Promoters</span>
             <h2 className="text-4xl md:text-5xl font-bold text-black mt-2">
               Committed to Empowering Youth and Social Service
             </h2>
           </div>
           <div>
             <a
-              href="#contact"
+              href="/contact"
               className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-opacity-90 transition"
             >
               Join Us
@@ -127,21 +68,13 @@ export default function Promoters() {
             1400: { slidesPerView: 4, spaceBetween: 32 },
           }}
         >
-          {teamMembers.map((member) => (
+          {executiveCouncilMembers.map((member) => (
             <SwiperSlide key={member.id}>
               <div className="bg-gray-100 overflow-hidden text-center transition-all duration-[400ms] hover:bg-primary group team-member-card">
                 <div className="relative z-[1] team-member-img">
                   <div className="relative w-full overflow-hidden bg-white" style={{ aspectRatio: '308/360' }}>
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      sizes="(max-width: 576px) 90vw, (max-width: 992px) 45vw, 25vw"
-                      className="object-contain p-2"
-                    />
-                    {/* Gradient Overlay */}
+                    <MemberPhoto name={member.name} image={member.image} />
                     <div className="team-member-overlay"></div>
-                    {/* Social Icons */}
                     <div className="team-member-socials">
                       <a
                         href="#"
@@ -194,7 +127,6 @@ export default function Promoters() {
         </Swiper>
         </div>
 
-        {/* Custom Styles to Match Reference */}
         <style jsx global>{`
           .team-member-card {
             border-radius: clamp(15px, 1.05vw, 20px);
