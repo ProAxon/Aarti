@@ -32,7 +32,7 @@ export async function GET() {
     );
 
     if (!response.ok) {
-      return NextResponse.json({ posts: [], error: 'Failed to fetch Instagram profile' }, { status: 502 });
+      return NextResponse.json({ posts: [], error: 'Failed to fetch Instagram profile' });
     }
 
     const data = await response.json();
@@ -59,6 +59,6 @@ export async function GET() {
       posts,
     });
   } catch {
-    return NextResponse.json({ posts: [], error: 'Instagram feed unavailable' }, { status: 500 });
+    return NextResponse.json({ posts: [], error: 'Instagram feed unavailable' });
   }
 }
