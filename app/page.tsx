@@ -5,6 +5,7 @@ import Features from "@/components/Features";
 import Courses from "@/components/Courses";
 import Team from "@/components/Team";
 import Programs from "@/components/Programs";
+import InstagramFeed from "@/components/InstagramFeed";
 import Testimonials from "@/components/Testimonials";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
         <Courses />
         <Team />
         <Programs />
+        <InstagramFeed />
         <Testimonials />
       </main>
       <Footer />

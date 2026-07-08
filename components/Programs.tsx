@@ -17,11 +17,6 @@ export default function Programs() {
       alt: 'Maratha Hostel, Kotwalpura Aurangabad — Exterior view',
     },
     {
-      id: 2,
-      image: '/images/works/mahratta-hostel-basavanagudi-bangalore-hostels-mxrflg9wd9.avif',
-      alt: 'Mahratta Hostel, Basavanagudi Bangalore — Street view',
-    },
-    {
       id: 3,
       image: '/images/works/download.jpeg',
       alt: 'Maratha Hostel archival photograph',

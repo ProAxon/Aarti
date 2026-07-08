@@ -8,7 +8,7 @@ const educators = [
     id: 1,
     name: 'NIIT Foundation',
     role: 'Education & Skill Development Partner',
-    image: '/images/educators/niit-foundation.png',
+    image: '/images/educators/niit-foundation-logo.png',
     website: 'https://niitfoundation.org/',
     highlights: [
       'Presence across 24 states in India',
@@ -24,7 +24,7 @@ const educators = [
     id: 2,
     name: 'Vikalp Guru',
     role: 'Career Guidance & Technical Empowerment Partner',
-    image: '/images/educators/vikalp-guru.png',
+    image: '/images/educators/vikalp-guru-logo.jpeg',
     website: 'https://vikalpaguru.com/',
     highlights: [
       'Educational and technical empowerment organization focused on building industry-ready professionals',
@@ -70,13 +70,13 @@ export default function InstructorsPage() {
                   key={educator.id}
                   className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition"
                 >
-                  <div className="relative h-48 sm:h-56 bg-[#faf8f5] flex items-center justify-center p-6">
+                  <div className="flex items-center justify-center p-6 sm:p-8 border-b border-gray-100 bg-white min-h-[120px]">
                     <Image
                       src={educator.image}
-                      alt={educator.name}
-                      width={320}
-                      height={120}
-                      className="max-h-full w-auto object-contain"
+                      alt={`${educator.name} logo`}
+                      width={220}
+                      height={100}
+                      className="h-16 sm:h-20 w-auto max-w-[220px] object-contain"
                     />
                   </div>
                   <div className="p-6 sm:p-8">
