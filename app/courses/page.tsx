@@ -9,21 +9,9 @@ import { liveCourses, categories } from "@/data/courses";
 
 const allCourses = liveCourses;
 
-const professions = [
-  { name: 'Lawyers', emoji: '👨‍⚖️' },
-  { name: 'Doctors', emoji: '👨‍⚕️' },
-  { name: 'Teachers', emoji: '👨‍🏫' },
-  { name: 'Engineers', emoji: '👨‍💼' },
-  { name: 'Business Professionals', emoji: '💼' },
-  { name: 'Traders', emoji: '🛒' },
-  { name: 'Entrepreneurs', emoji: '👩‍💼' },
-  { name: 'Students', emoji: '🎓' },
-];
-
 function CoursesPageContent() {
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedProfession, setSelectedProfession] = useState<string | null>(null);
   const [visibleCourses, setVisibleCourses] = useState(allCourses);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,41 +23,26 @@ function CoursesPageContent() {
     }
   }, [searchParams]);
 
-  // Filter courses based on selected category (and future profession mapping)
   useEffect(() => {
     setIsLoading(true);
 
     const timeout = setTimeout(() => {
-      const filtered = allCourses.filter((course) => {
-        if (selectedCategory && course.category !== selectedCategory) {
-          return false;
-        }
-        // Profession filtering can be added later if we have profession-specific data
-        return true;
-      });
+      const filtered = selectedCategory
+        ? allCourses.filter((course) => course.category === selectedCategory)
+        : allCourses;
 
       setVisibleCourses(filtered);
       setIsLoading(false);
-    }, 250); // subtle skeleton pulse on filter change
+    }, 250);
 
     return () => clearTimeout(timeout);
-  }, [selectedCategory, selectedProfession]);
+  }, [selectedCategory]);
 
   const handleCategoryClick = (category: string) => {
     if (selectedCategory === category) {
       setSelectedCategory(null); // Deselect if already selected
     } else {
       setSelectedCategory(category);
-    }
-  };
-
-  const handleProfessionClick = (profession: string) => {
-    if (selectedProfession === profession) {
-      setSelectedProfession(null); // Deselect if already selected
-    } else {
-      setSelectedProfession(profession);
-      // For now, profession filter shows all courses
-      // Can be enhanced later with profession-specific course mapping
     }
   };
 
@@ -113,37 +86,10 @@ function CoursesPageContent() {
               </div>
             </div>
 
-            {/* Profession Filter Section */}
-            <div className="mb-10 bg-white rounded-lg shadow-sm p-6">
-              <div className="text-center mb-4">
-                <h3 className="text-xl font-semibold text-black mb-2">Filter by Profession</h3>
-                <p className="text-sm text-paragraph">Find courses tailored to your profession</p>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {professions.map((profession) => (
-                  <button
-                    key={profession.name}
-                    onClick={() => handleProfessionClick(profession.name)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-xl font-medium text-xs sm:text-sm transition ${
-                      selectedProfession === profession.name
-                        ? 'bg-secondary text-white shadow-md'
-                        : 'bg-orange-50 text-gray-900'
-                    }`}
-                  >
-                    <span className="text-base sm:text-lg">{profession.emoji}</span>
-                    <span className="truncate">{profession.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Results count */}
-            {(selectedCategory || selectedProfession) && (
+            {selectedCategory && (
               <div className="mb-6 text-center">
                 <p className="text-body">
-                  Showing {visibleCourses.length} course{visibleCourses.length !== 1 ? 's' : ''}
-                  {selectedCategory && ` in ${selectedCategory}`}
-                  {selectedProfession && ` for ${selectedProfession}`}
+                  Showing {visibleCourses.length} course{visibleCourses.length !== 1 ? 's' : ''} in {selectedCategory}
                 </p>
               </div>
             )}
@@ -175,13 +121,10 @@ function CoursesPageContent() {
               <div className="text-center py-12">
                 <p className="text-xl text-body">No courses found matching your filters.</p>
                 <button
-                  onClick={() => {
-                    setSelectedCategory(null);
-                    setSelectedProfession(null);
-                  }}
+                  onClick={() => setSelectedCategory(null)}
                   className="mt-4 text-primary hover:underline"
                 >
-                  Clear all filters
+                  Clear filter
                 </button>
               </div>
             )}
